@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  academico:
+    container_name: apiAcademico
+    build: ./academico
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./academico/:/usr/src/academico/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+  db:
+    restart: always
+    image: postgres:12.0-alpine
+    ports:
+      - 51001:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.dev.db  
+  pgadmin:
+    container_name: pgadminps
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: remington@remington.com
+      PGADMIN_DEFAULT_PASSWORD: 12345
+    ports:
+      - "8081:80"
+volumes:
+  postgres_data:
