@@ -16,6 +16,7 @@ class tipoDocumento_APIView(APIView):
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
 
 
 class tipoDocumento_APIView_List(APIView):
@@ -24,6 +25,19 @@ class tipoDocumento_APIView_List(APIView):
         tpdocumento = tipoDocumento.objects.all()
         serializer = tipoDocumentoSerializers(tpdocumento, many=True)
         return Response(serializer.data)
+    
+    def put(self, request, pk, format=None):
+        tipoDocumento = self.get_object(pk) #  select * from tipoDcumento where id=pk
+        serializer = tipoDocumentoSerializers(tipoDocumento, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, format=None):
+        tipoDocumento = self.get_object(pk)
+        tipoDocumento.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class persona_APIView(APIView):
